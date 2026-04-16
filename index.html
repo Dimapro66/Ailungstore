@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ailung Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050a14;
+      --surface: #0d1a2e;
+      --border: #1a3a5c;
+      --accent: #00d4ff;
+      --accent2: #7b2fff;
+      --text: #c8dff5;
+      --text-dim: #4a6a8a;
+      --danger: #ff4466;
+      --success: #00ff99;
+      --glow: 0 0 20px rgba(0, 212, 255, 0.4);
+      --glow2: 0 0 30px rgba(123, 47, 255, 0.5);
+    }
+ 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    body {
+      background: var(--bg);
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+ 
+    /* Animated background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      z-index: 0;
+    }
+ 
+    /* Radial glow center */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(123,47,255,0.12) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+ 
+    @keyframes gridMove {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(60px); }
+    }
+ 
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 520px;
+    }
+ 
+    /* Logo area */
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+ 
+    .logo-icon {
+      font-size: 52px;
+      line-height: 1;
+      display: block;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 20px rgba(0,212,255,0.8));
+      animation: pulse 3s ease-in-out infinite;
+    }
+ 
+    @keyframes pulse {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(0,212,255,0.8)); }
+      50% { filter: drop-shadow(0 0 35px rgba(123,47,255,0.9)); }
+    }
+ 
+    .logo-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-transform: uppercase;
+    }
+ 
+    .logo-sub {
+      font-size: 0.85rem;
+      letter-spacing: 4px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+ 
+    /* Card */
+    .card {
+      background: rgba(13, 26, 46, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 36px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 0 1px rgba(0,212,255,0.08), 0 30px 60px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+ 
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+    }
+ 
+    /* Steps */
+    .step {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .step.active { display: block; }
+ 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+ 
+    .step-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 4px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      opacity: 0.7;
+    }
+ 
+    h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+ 
+    p {
+      color: var(--text-dim);
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+ 
+    /* Input */
+    .input-wrap {
+      position: relative;
+      margin-bottom: 20px;
+    }
+ 
+    input[type="text"] {
+      width: 100%;
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: 1px;
+      outline: none;
+      transition: all 0.3s;
+    }
+ 
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+      background: rgba(0, 212, 255, 0.08);
+    }
+ 
+    input[type="text"]::placeholder {
+      color: var(--text-dim);
+      font-weight: 300;
+    }
+ 
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+ 
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+ 
+    .btn:hover::after { opacity: 1; }
+ 
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: var(--glow), var(--glow2);
+    }
+ 
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0,212,255,0.6), 0 0 40px rgba(123,47,255,0.6);
+    }
+ 
+    .btn-primary:active { transform: translateY(0); }
+ 
+    .btn-yes {
+      background: linear-gradient(135deg, #00c879, #00ff99);
+      color: #001a0e;
+      box-shadow: 0 0 20px rgba(0,255,153,0.4);
+      margin-bottom: 12px;
+    }
+ 
+    .btn-no {
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      box-shadow: 0 0 15px rgba(255,68,102,0.2);
+    }
+ 
+    .btn-no:hover { background: rgba(255,68,102,0.1); }
+ 
+    .btn-download {
+      background: linear-gradient(135deg, #7b2fff, #00d4ff);
+      color: #fff;
+      font-size: 0.9rem;
+      padding: 18px 24px;
+      box-shadow: 0 0 40px rgba(123,47,255,0.6), 0 0 40px rgba(0,212,255,0.4);
+      animation: downloadPulse 2s ease-in-out infinite;
+    }
+ 
+    @keyframes downloadPulse {
+      0%, 100% { box-shadow: 0 0 30px rgba(123,47,255,0.5), 0 0 30px rgba(0,212,255,0.3); }
+      50% { box-shadow: 0 0 50px rgba(123,47,255,0.8), 0 0 50px rgba(0,212,255,0.6); }
+    }
+ 
+    /* Confirm name display */
+    .confirm-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--accent);
+      text-align: center;
+      padding: 16px;
+      margin: 20px 0;
+      border: 1px solid rgba(0,212,255,0.3);
+      border-radius: 10px;
+      background: rgba(0,212,255,0.06);
+      letter-spacing: 3px;
+      word-break: break-word;
+    }
+ 
+    /* Download step special */
+    .download-icon {
+      font-size: 3rem;
+      text-align: center;
+      display: block;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 20px rgba(0,212,255,0.8));
+    }
+ 
+    .name-badge {
+      display: inline-block;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.3);
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+ 
+    /* Admin password modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+    .modal-overlay.open { display: flex; }
+ 
+    .modal-box {
+      background: #0d1a2e;
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 90%;
+      max-width: 360px;
+      box-shadow: 0 0 40px rgba(0,212,255,0.3);
+      position: relative;
+    }
+ 
+    .modal-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+      border-radius: 16px 16px 0 0;
+    }
+ 
+    .modal-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+ 
+    .modal-box input[type="password"] {
+      width: 100%;
+      background: rgba(0,212,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      color: #fff;
+      outline: none;
+      margin-bottom: 12px;
+      transition: all 0.3s;
+      letter-spacing: 4px;
+    }
+ 
+    .modal-box input[type="password"]:focus {
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+    }
+ 
+    .modal-wrong {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+      display: none;
+    }
+    .modal-wrong.show { display: block; }
+ 
+    .modal-btn-row {
+      display: flex;
+      gap: 10px;
+    }
+ 
+    .modal-confirm {
+      flex: 1;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+ 
+    .modal-cancel {
+      background: transparent;
+      border: 1px solid var(--text-dim);
+      color: var(--text-dim);
+      border-radius: 8px;
+      padding: 11px 16px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+ 
+    /* Log panel */
+    .log-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.97);
+      z-index: 1000;
+      padding: 40px;
+      overflow-y: auto;
+    }
+ 
+    .log-panel.open { display: block; }
+ 
+    .log-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.2rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+ 
+    .log-entry {
+      font-size: 0.95rem;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+ 
+    .log-entry span {
+      color: var(--accent);
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+    }
+ 
+    .log-empty { color: var(--text-dim); font-style: italic; }
+ 
+    .log-close {
+      position: fixed;
+      top: 20px; right: 20px;
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      letter-spacing: 2px;
+    }
+ 
+    .log-clear {
+      margin-top: 20px;
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      letter-spacing: 2px;
+    }
+ 
+    /* Error */
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.9rem;
+      margin-top: -12px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+ 
+    /* Footer hint */
+    .footer-hint {
+      text-align: center;
+      margin-top: 20px;
+      color: rgba(74,106,138,0.4);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+ 
+<div class="container">
+  <div class="logo-wrap">
+    <span class="logo-icon">🛸</span>
+    <div class="logo-title">Ailung</div>
+    <div class="logo-sub">Application Store</div>
+  </div>
+ 
+  <div class="card">
+ 
+    <!-- STEP 1: Enter name -->
+    <div class="step active" id="step1">
+      <div class="step-label">// Шаг 01 — Идентификация</div>
+      <h2>Введите ваше имя</h2>
+      <p>Перед скачиванием укажите своё настоящее имя. Это необходимо для регистрации загрузки.</p>
+      <div class="input-wrap">
+        <input type="text" id="nameInput" placeholder="Ваше настоящее имя..." maxlength="50" autocomplete="off" />
+      </div>
+      <div class="error-msg" id="nameError">⚠ Пожалуйста, введите ваше имя</div>
+      <button class="btn btn-primary" onclick="goToConfirm()">Продолжить →</button>
+    </div>
+ 
+    <!-- STEP 2: Confirm name -->
+    <div class="step" id="step2">
+      <div class="step-label">// Шаг 02 — Подтверждение</div>
+      <h2>Это точно ваше имя?</h2>
+      <p>Пожалуйста, проверьте и подтвердите:</p>
+      <div class="confirm-name" id="confirmNameDisplay"></div>
+      <button class="btn btn-yes" onclick="goToDownload()">✓ Да, это моё имя</button>
+      <button class="btn btn-no" onclick="goBack()">✗ Нет, изменить имя</button>
+    </div>
+ 
+    <!-- STEP 3: Download -->
+    <div class="step" id="step3">
+      <div class="step-label">// Шаг 03 — Загрузка</div>
+      <span class="download-icon">📦</span>
+      <h2>Добро пожаловать!</h2>
+      <p>Привет, <span class="name-badge" id="welcomeName"></span>! Ваш доступ подтверждён. Нажмите кнопку ниже, чтобы скачать Ailung Store.</p>
+      <button class="btn btn-download" onclick="downloadAPK()">⬇ Скачать Ailung Store (.apk)</button>
+      <p style="font-size:0.75rem; margin-top:14px; color:#4a6a8a; text-align:center;">Файл: app-debug.apk · Android 7.0+</p>
+    </div>
+ 
+  </div>
+  <div class="footer-hint">© AILUNG STORE · AUTHORIZED ACCESS ONLY</div>
+</div>
+ 
+<!-- Password modal -->
+<div class="modal-overlay" id="pwModal">
+  <div class="modal-box">
+    <div class="modal-title">🔐 // ADMIN ACCESS</div>
+    <input type="password" id="pwInput" placeholder="Введите пароль..." maxlength="30" />
+    <div class="modal-wrong" id="pwWrong">⚠ Неверный пароль</div>
+    <div class="modal-btn-row">
+      <button class="modal-confirm" onclick="checkPassword()">ВОЙТИ</button>
+      <button class="modal-cancel" onclick="closeModal()">ОТМЕНА</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- Admin log panel -->
+<div class="log-panel" id="logPanel">
+  <button class="log-close" onclick="closeLog()">✕ ЗАКРЫТЬ</button>
+  <div class="log-title">// ADMIN · ЖУРНАЛ ЗАГРУЗОК</div>
+  <div id="logList"></div>
+  <button class="log-clear" onclick="clearLog()">🗑 Очистить журнал</button>
+</div>
+ 
+<script>
+  let currentName = '';
+ 
+  // =============================================
+  // СМЕНИ ПАРОЛЬ ЗДЕСЬ ↓ (только латиница/цифры)
+  const ADMIN_PASSWORD = 'ailung2025';
+  // =============================================
+ 
+  function goToConfirm() {
+    const input = document.getElementById('nameInput');
+    const name = input.value.trim();
+    const err = document.getElementById('nameError');
+    if (!name) {
+      err.classList.add('show');
+      input.focus();
+      return;
+    }
+    err.classList.remove('show');
+    currentName = name;
+    document.getElementById('confirmNameDisplay').textContent = name;
+    showStep('step2');
+  }
+ 
+  function goBack() {
+    showStep('step1');
+    document.getElementById('nameInput').focus();
+  }
+ 
+  function goToDownload() {
+    const entry = {
+      name: currentName,
+      time: new Date().toLocaleString('ru-RU')
+    };
+    const logs = JSON.parse(localStorage.getItem('ailungLogs') || '[]');
+    logs.push(entry);
+    localStorage.setItem('ailungLogs', JSON.stringify(logs));
+    document.getElementById('welcomeName').textContent = currentName;
+    showStep('step3');
+  }
+ 
+  function showStep(id) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+ 
+  // Ctrl+Shift+A → открывает окно с паролем
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+      openModal();
+    }
+  });
+ 
+  function openModal() {
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwWrong').classList.remove('show');
+    document.getElementById('pwModal').classList.add('open');
+    setTimeout(() => document.getElementById('pwInput').focus(), 100);
+  }
+ 
+  function closeModal() {
+    document.getElementById('pwModal').classList.remove('open');
+  }
+ 
+  function checkPassword() {
+    const entered = document.getElementById('pwInput').value;
+    if (entered === ADMIN_PASSWORD) {
+      closeModal();
+      openLog();
+    } else {
+      document.getElementById('pwWrong').classList.add('show');
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwInput').focus();
+    }
+  }
+ 
+  document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+    if (e.key === 'Escape') closeModal();
+  });
+ 
+  function openLog() {
+    const logs = JSON.parse(localStorage.getItem('ailungLogs') || '[]');
+    const list = document.getElementById('logList');
+    if (logs.length === 0) {
+      list.innerHTML = '<div class="log-entry log-empty">Загрузок пока нет.</div>';
+    } else {
+      list.innerHTML = logs.map((l, i) =>
+        `<div class="log-entry">${i+1}. <strong>${l.name}</strong> &nbsp;·&nbsp; <span>${l.time}</span></div>`
+      ).join('');
+    }
+    document.getElementById('logPanel').classList.add('open');
+  }
+ 
+  function closeLog() {
+    document.getElementById('logPanel').classList.remove('open');
+  }
+ 
+  function clearLog() {
+    if (confirm('Очистить весь журнал?')) {
+      localStorage.removeItem('ailungLogs');
+      document.getElementById('logList').innerHTML = '<div class="log-entry log-empty">Журнал очищен.</div>';
+    }
+  }
+ 
+  document.getElementById('nameInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') goToConfirm();
+  });
+ 
+  function downloadAPK() {
+    const fileName = 'app-debug.apk';
+    // Строим правильный URL относительно текущей страницы
+    const base = window.location.href.split('/').slice(0, -1).join('/');
+    const url = base + '/' + fileName;
+    fetch(url)
+      .then(res => {
+        if (!res.ok) throw new Error('not found');
+        return res.blob();
+      })
+      .then(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      })
+      .catch(() => {
+        window.location.href = url;
+      });
+  }
+</script>
+</body>
+</html>
+ 
